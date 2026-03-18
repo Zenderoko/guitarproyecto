@@ -4,7 +4,6 @@ import styles from "@styles/Carrito.module.css";
 import Image from "next/image";
 import useStore from "../hooks/useStore";
 import { IoTrashBinOutline } from "react-icons/io5";
-import { useEffect } from "react";
 
 const Carrito = () => {
   const cart = useStore(useCartStore, (state) => state.cart);
@@ -80,10 +79,17 @@ const Carrito = () => {
         </div>
         <div className={styles.resumen}>
           <h3>Resumen del Pedido</h3>
-          {total > 0 ? (
+          {total() > 0 ? (
             <>
-              <p>Resumen del Pedido</p>
-              <p>Total a pagar: {total}</p>
+              <ul>
+                {cart.map((product) => (
+                  <li key={product.id}>
+                    {product.nombre} x {product.quantity} = $
+                    {product.precio * product.quantity}
+                  </li>
+                ))}
+              </ul>
+              <p className={styles.total}>Total a pagar: ${total()}</p>
             </>
           ) : (
             <p>No hay productos en el carrito</p>
