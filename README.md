@@ -1,40 +1,108 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+# My Guitarra LA - E-commerce de Guitarras
 
-## Getting Started
+Tienda en línea de guitars construido con Next.js y Stripe (Transbank/Webpay para Chile).
 
-First, run the development server:
+## Requisitos Previos
+
+- Node.js 18+
+- npm, yarn, pnpm o bun
+- Servidor de Strapi corriendo en `http://localhost:1337`
+
+## Instalación
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# Instalar dependencias
+npm install
+# o
+pnpm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Variables de Entorno
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+Crea un archivo `.env.local` con las siguientes variables:
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+```env
+API_URL=http://localhost:1337/api
+NEXT_PUBLIC_API_URL=http://localhost:1337/api
+NEXT_PUBLIC_BASE_URL=http://localhost:3000
+```
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+## Ejecutar el Proyecto
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+# Desarrollo
+npm run dev
 
-## Learn More
+# Producción
+npm run build
+npm start
+```
 
-To learn more about Next.js, take a look at the following resources:
+Abre [http://localhost:3000](http://localhost:3000)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
+## Estructura del Proyecto
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```
+├── components/       # Componentes React
+├── helpers/         # Funciones auxiliares
+├── hooks/           # Custom hooks
+├── pages/           # Páginas y rutas API
+│   ├── api/         # API routes
+│   └── pago/        # Páginas de pago
+├── public/          # Archivos estáticos
+├── store/           # Estado global (Zustand)
+└── styles/          # Archivos CSS Modules
+```
 
-## Deploy on Vercel
+## Sistema de Pago (Transbank/Webpay)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Modo Pruebas (Integración)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+El proyecto viene configurado para usar el ambiente de pruebas de Transbank. Usa las tarjetas de prueba documentación: https://www.transbankdevelopers.cl/documentacion/como_empezar#tarjetas-de-prueba
+
+### Modo Producción
+
+Para usar en producción:
+
+1. Obtén tus credenciales de Transbank en: https://www.transbankdevelopers.cl
+
+2. Modifica `pages/api/pago/init.js` y `pages/api/pago/response.js`:
+
+```javascript
+// Reemplaza:
+Environment.Integration
+IntegrationCommerceCodes.WEBPAY_PLUS
+IntegrationApiKeys.WEBPAY
+
+// Por tus credenciales de producción:
+Environment.Production
+TU_CODIGO_DE_COMERCIO
+TU_API_KEY
+```
+
+### Flujo de Pago
+
+1. Usuario agrega productos al carrito
+2. Click en "Total a Pagar" → redirecciona a `/pago`
+3. Página de checkout muestra resumen del pedido
+4. Opción de editar cantidades antes de pagar
+5. Click "Pagar con Webpay" → redirecciona a Transbank
+6. Usuario completa pago con tarjeta
+7. Transbank redirecciona de vuelta a `/pago/success` o `/pago/failed`
+
+## Comandos Disponibles
+
+```bash
+npm run dev      # Servidor de desarrollo
+npm run build    # Construir para producción
+npm run start    # Iniciar servidor de producción
+npm run lint     # Verificar código
+```
+
+## Tech Stack
+
+- Next.js 16
+- React 19
+- Zustand (gestión de estado)
+- CSS Modules
+- Transbank SDK (Webpay Plus)
