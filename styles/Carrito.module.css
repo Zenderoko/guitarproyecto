@@ -61,6 +61,10 @@
   border-radius: 1rem;
 }
 
+.select:hover {
+  cursor: pointer;
+}
+
 .precio {
   color: var(--primary);
   font-size: 2rem;
