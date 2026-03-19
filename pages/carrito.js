@@ -4,8 +4,10 @@ import styles from "@styles/Carrito.module.css";
 import Image from "next/image";
 import useStore from "../hooks/useStore";
 import { IoTrashBinOutline } from "react-icons/io5";
+import { useRouter } from "next/router";
 
 const Carrito = () => {
+  const router = useRouter();
   const cart = useStore(useCartStore, (state) => state.cart);
   const removeFromCart = useCartStore((state) => state.removeFromCart);
   const total = useCartStore((state) => state.total);
@@ -90,6 +92,12 @@ const Carrito = () => {
                 ))}
               </ul>
               <p className={styles.total}>Total a pagar: ${total()}</p>
+              <button
+                className={styles.pagarBtn}
+                onClick={() => router.push("/pago")}
+              >
+                Pagar
+              </button>
             </>
           ) : (
             <p>No hay productos en el carrito</p>
