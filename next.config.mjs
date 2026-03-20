@@ -2,6 +2,7 @@
 const nextConfig = {
   /* config options here */
   reactStrictMode: true,
+  allowedDevOrigins: ["6109-179-57-115-26.ngrok-free.app"],
   images: {
     remotePatterns: [
       {
